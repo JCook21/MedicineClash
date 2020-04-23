@@ -10,4 +10,11 @@ public class PatientTest {
         Patient patient = new Patient();
         Assert.assertNotNull(patient.clash(Arrays.asList("Aspirin")));
     }
+
+    @Test
+    public void testClashOneDate(){
+        Patient patient = new Patient();
+        Assert.assertEquals(1, patient.clash(Arrays.asList("Tylenol")).size());
+
+    }
 }

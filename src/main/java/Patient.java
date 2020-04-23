@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 public class Patient {
@@ -15,7 +16,6 @@ public class Patient {
 	}
 
 	public Collection<Date> clash(Collection<String> medicineNames, int daysBack) {
-		// TODO: implement this method
-		return null;
+		return Collections.emptyList();
 	}
 }

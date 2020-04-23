@@ -1,0 +1,16 @@
+.idea/
+*.iml
+target/
+
+.classpath
+.project
+bin/
+.settings/
+
+# Gradle
+.gradle
+/build/
+/out
+
+# Approval Testing
+GildedRoseTest.*.received.txt

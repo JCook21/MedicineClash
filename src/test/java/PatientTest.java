@@ -1,7 +1,12 @@
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.Arrays;
+
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public class PatientTest {
 
@@ -12,9 +17,18 @@ public class PatientTest {
     }
 
     @Test
-    public void testClashOneDate(){
+    public void testClashWithTwoMedicines() {
         Patient patient = new Patient();
-        Assert.assertEquals(1, patient.clash(Arrays.asList("Tylenol")).size());
+        Medicine tylenolMedicine = new Medicine("Tylenol");
+        Medicine aspirinMedicine = new Medicine("Aspirin");
+        Prescription tylenolPrescription = new Prescription(LocalDate.now(), 5);
 
+        aspirinMedicine.addPrescription(tylenolPrescription);
+        tylenolMedicine.addPrescription(tylenolPrescription);
+
+        patient.addMedicine(tylenolMedicine);
+        patient.addMedicine(aspirinMedicine);
+
+        assertThat(patient.clash(Arrays.asList("Tylenol", "Aspirin")).size(), is(not(0)));
     }
 }

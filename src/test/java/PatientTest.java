@@ -47,4 +47,25 @@ public class PatientTest {
         patient.addMedicine(new Medicine(("Advil")));
         Assert.assertTrue(patient.clash(new ArrayList<String>()).isEmpty());
     }
+
+    @Test
+    public void testSingleMedicineListReturnsNothing() {
+        Patient patient = new Patient();
+        patient.addMedicine(new Medicine(("Advil")));
+        Assert.assertTrue(patient.clash(Arrays.asList("Advil")).isEmpty());
+    }
+
+    @Test
+    public void testSinglePatientSingleMedicine(){
+        Patient patient = new Patient();
+        patient.addMedicine(new Medicine("Aspirin"));
+        Assert.assertTrue(patient.clash(Arrays.asList("Tylenol", "Aspirin")).isEmpty());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testSinglePatientNullMedicineList(){
+        Patient patient = new Patient();
+        patient.addMedicine(new Medicine("Aspirin"));
+        Assert.assertTrue(patient.clash(null).isEmpty());
+    }
 }

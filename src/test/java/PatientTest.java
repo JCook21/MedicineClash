@@ -8,6 +8,7 @@ import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.empty;
 
 public class PatientTest {
 
@@ -32,7 +33,7 @@ public class PatientTest {
         patient.addMedicine(tylenolMedicine);
         patient.addMedicine(aspirinMedicine);
 
-        assertThat(patient.clash(Arrays.asList("Tylenol", "Aspirin")).size(), is(not(0)));
+        assertThat(patient.clash(Arrays.asList("Tylenol", "Aspirin")), is(not(empty())));
     }
 
     @Test

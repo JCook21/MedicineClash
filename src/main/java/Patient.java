@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,11 +12,14 @@ public class Patient {
 		this.medicines.add(medicine);
 	}
 
-	public Collection<Date> clash(Collection<String> medicineNames) {
+	/*
+	* A clash can never happen with <=1 medicine
+	* */
+	public Collection<LocalDate> clash(Collection<String> medicineNames) {
 		return clash(medicineNames, 90);
 	}
 
-	public Collection<Date> clash(Collection<String> medicineNames, int daysBack) {
+	public Collection<LocalDate> clash(Collection<String> medicineNames, int daysBack) {
 		return Collections.emptyList();
 	}
 }

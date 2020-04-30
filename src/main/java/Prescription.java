@@ -1,11 +1,12 @@
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Prescription {
 
-    private Date dispenseDate = new Date();
+    private LocalDate dispenseDate;
     private int daysSupply = 30;
 
-    public Prescription(Date dispenseDate, int daysSupply) {
+    public Prescription(LocalDate dispenseDate, int daysSupply) {
         this.dispenseDate = dispenseDate;
         this.daysSupply = daysSupply;
     }

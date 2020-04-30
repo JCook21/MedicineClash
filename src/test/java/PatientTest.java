@@ -2,6 +2,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.not;
@@ -14,6 +15,8 @@ public class PatientTest {
     public void testClashNeverReturnsNull() {
         Patient patient = new Patient();
         Assert.assertNotNull(patient.clash(Arrays.asList("Aspirin")));
+
+
     }
 
     @Test
@@ -36,5 +39,12 @@ public class PatientTest {
     public void testSinglePatientNoMedicine(){
         Patient patient = new Patient();
         Assert.assertTrue(patient.clash(Arrays.asList("Tylenol", "Aspirin")).isEmpty());
+    }
+
+    @Test
+    public void testEmptyMedicineListReturnsNothing() {
+        Patient patient = new Patient();
+        patient.addMedicine(new Medicine(("Advil")));
+        Assert.assertTrue(patient.clash(new ArrayList<String>()).isEmpty());
     }
 }

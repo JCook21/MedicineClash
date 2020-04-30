@@ -20,6 +20,9 @@ public class Patient {
 	}
 
 	public Collection<LocalDate> clash(Collection<String> medicineNames, int daysBack) {
+		if (medicines.isEmpty() || medicineNames.isEmpty()) {
+			return Collections.emptyList();
+		}
 		return Collections.singletonList(LocalDate.now());
 	}
 }

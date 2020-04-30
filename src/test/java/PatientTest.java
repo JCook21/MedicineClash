@@ -31,4 +31,10 @@ public class PatientTest {
 
         assertThat(patient.clash(Arrays.asList("Tylenol", "Aspirin")).size(), is(not(0)));
     }
+
+    @Test
+    public void testSinglePatientNoMedicine(){
+        Patient patient = new Patient();
+        Assert.assertTrue(patient.clash(Arrays.asList("Tylenol", "Aspirin")).isEmpty());
+    }
 }

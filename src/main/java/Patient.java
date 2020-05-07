@@ -1,8 +1,5 @@
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 public class Patient {
 
@@ -20,7 +17,12 @@ public class Patient {
 	}
 
 	public Collection<LocalDate> clash(Collection<String> medicineNames, int daysBack) {
-		if (medicineNames == null) {
+        if (daysBack < 0) {
+            throw new IllegalArgumentException("daysBack cannot be negative.");
+        }
+
+//        Objects.requireNonNull(medicineNames,"Medicine Names is null." );
+	    if (medicineNames == null) {
 			throw new IllegalArgumentException("Medicine Names is null.");
 		}
 
@@ -37,6 +39,7 @@ public class Patient {
 		if ( medicines.size() <= 1 || medicineNames.size() <= 1) {
 			return Collections.emptyList();
 		}
+
 		return Collections.singletonList(LocalDate.now());
 	}
 }

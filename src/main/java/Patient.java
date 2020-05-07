@@ -31,12 +31,12 @@ public class Patient {
 			throw new IllegalArgumentException("Medicine Names contains Empty String.");
 		}
 
-		if(medicineNames.contains(null))
+		if(medicineNames.stream().anyMatch(Objects::isNull))
 		{
 			throw new IllegalArgumentException("Medicine Names contains a NULL value.");
 		}
 
-		if ( medicines.size() <= 1 || medicineNames.size() <= 1) {
+		if ( medicines.size() <= 1 || medicineNames.size() <= 1 || daysBack == 0) {
 			return Collections.emptyList();
 		}
 

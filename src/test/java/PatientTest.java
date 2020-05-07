@@ -110,6 +110,14 @@ public class PatientTest {
         Patient patient = new Patient();
         patient.addMedicine(new Medicine("Ibuprofen"));
         patient.addMedicine(new Medicine("Tylenol"));
-        Assert.assertTrue(patient.clash(Arrays.asList("Aspirin", "Twinrix"), 0).isEmpty());
+        Assert.assertTrue(patient.clash(List.of("Aspirin", "Twinrix"), 0).isEmpty());
+    }
+
+    @Test
+    public void testOneDayBackWithNoPrescriptionsReturnsEmptyCollection() {
+        Patient patient = new Patient();
+        patient.addMedicine(new Medicine("Ibuprofen"));
+        patient.addMedicine(new Medicine("Tylenol"));
+        Assert.assertTrue(patient.clash(List.of("Aspirin", "Twinrix"), 1).isEmpty());
     }
 }

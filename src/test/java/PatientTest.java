@@ -1,5 +1,7 @@
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,12 +15,13 @@ import static org.hamcrest.Matchers.empty;
 
 public class PatientTest {
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     @Test
     public void testClashNeverReturnsNull() {
         Patient patient = new Patient();
         Assert.assertNotNull(patient.clash(Arrays.asList("Aspirin")));
-
-
     }
 
     @Test
@@ -71,10 +74,12 @@ public class PatientTest {
         patient.clash(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+   @Test
     public void testSinglePatientWithEmptyStringMedicineList()
     {
         Patient patient = new Patient();
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Medicine Names contains Empty String.");
         patient.clash(List.of(""));
     }
 }

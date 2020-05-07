@@ -3,10 +3,10 @@ import java.util.*;
 
 public class Patient {
 
-	private Collection<Medicine> medicines = new ArrayList<Medicine>();
+	private Collection<Medicine> medicines = new ArrayList<>();
 
 	public void addMedicine(Medicine medicine) {
-		this.medicines.add(medicine);
+		medicines.add(medicine);
 	}
 
 	/*
@@ -17,29 +17,23 @@ public class Patient {
 	}
 
 	public Collection<LocalDate> clash(Collection<String> medicineNames, int daysBack) {
-        if (daysBack < 0) {
-            throw new IllegalArgumentException("daysBack cannot be negative.");
-        }
 
-//        Objects.requireNonNull(medicineNames,"Medicine Names is null." );
-	    if (medicineNames == null) {
-			throw new IllegalArgumentException("Medicine Names is null.");
-		}
-
-		if(medicineNames.contains(""))
-		{
-			throw new IllegalArgumentException("Medicine Names contains Empty String.");
-		}
-
-		if(medicineNames.stream().anyMatch(Objects::isNull))
-		{
-			throw new IllegalArgumentException("Medicine Names contains a NULL value.");
-		}
+		validateInputs(medicineNames, daysBack);
 
 		if ( medicines.size() <= 1 || medicineNames.size() <= 1 || daysBack == 0) {
 			return Collections.emptyList();
 		}
 
 		return Collections.singletonList(LocalDate.now());
+	}
+
+	private void validateInputs(Collection<String> medicineNames, int daysBack) {
+		assert daysBack >= 0 : "daysBack cannot be negative.";
+
+		assert medicineNames != null : "Medicine Names is null.";
+
+		assert !medicineNames.contains("") : "Medicine Names contains Empty String.";
+
+		assert medicineNames.stream().noneMatch(Objects::isNull) : "Medicine Names contains a NULL value.";
 	}
 }

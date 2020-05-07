@@ -103,4 +103,13 @@ public class PatientTest {
         expectedException.expectMessage("daysBack cannot be negative.");
         patient.clash(Collections.singletonList("Aspirin"), -1);
     }
+
+    @Test
+    public void testZeroDaysBackReturnsEmptyCollection()
+    {
+        Patient patient = new Patient();
+        patient.addMedicine(new Medicine("Ibuprofen"));
+        patient.addMedicine(new Medicine("Tylenol"));
+        Assert.assertTrue(patient.clash(Arrays.asList("Aspirin", "Twinrix"), 0).isEmpty());
+    }
 }

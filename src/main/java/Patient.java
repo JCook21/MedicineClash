@@ -20,7 +20,10 @@ public class Patient {
 	}
 
 	public Collection<LocalDate> clash(Collection<String> medicineNames, int daysBack) {
-		if (medicines.size() <= 1 || medicineNames.size() <= 1) {
+		if (medicineNames == null) {
+			throw new IllegalArgumentException("Medicine Names is null.");
+		}
+		if ( medicines.size() <= 1 || medicineNames.size() <= 1) {
 			return Collections.emptyList();
 		}
 		return Collections.singletonList(LocalDate.now());

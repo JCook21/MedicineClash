@@ -63,10 +63,10 @@ public class PatientTest {
         Assert.assertTrue(patient.clash(Arrays.asList("Tylenol", "Aspirin")).isEmpty());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSinglePatientNullMedicineList(){
         Patient patient = new Patient();
         patient.addMedicine(new Medicine("Aspirin"));
-        Assert.assertTrue(patient.clash(null).isEmpty());
+        patient.clash(null);
     }
 }

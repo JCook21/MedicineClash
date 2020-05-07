@@ -4,6 +4,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
@@ -68,5 +69,12 @@ public class PatientTest {
         Patient patient = new Patient();
         patient.addMedicine(new Medicine("Aspirin"));
         patient.clash(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSinglePatientWithEmptyStringMedicineList()
+    {
+        Patient patient = new Patient();
+        patient.clash(List.of(""));
     }
 }

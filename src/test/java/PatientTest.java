@@ -6,6 +6,7 @@ import org.junit.rules.ExpectedException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.not;
@@ -67,9 +68,11 @@ public class PatientTest {
         Assert.assertTrue(patient.clash(Arrays.asList("Tylenol", "Aspirin")).isEmpty());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSinglePatientNullMedicineList(){
         Patient patient = new Patient();
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Medicine Names is null.");
         patient.addMedicine(new Medicine("Aspirin"));
         patient.clash(null);
     }
@@ -80,6 +83,24 @@ public class PatientTest {
         Patient patient = new Patient();
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Medicine Names contains Empty String.");
-        patient.clash(List.of(""));
+        patient.clash(Collections.singletonList(""));
+    }
+
+    @Test
+    public void testSinglePatientWithNullInMedicineList()
+    {
+        Patient patient = new Patient();
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Medicine Names contains a NULL value.");
+        patient.clash(Collections.singletonList(null));
+    }
+
+    @Test
+    public void testNegativeDaysBack()
+    {
+        Patient patient = new Patient();
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("daysBack cannot be negative.");
+        patient.clash(Collections.singletonList("Aspirin"), -1);
     }
 }

@@ -23,10 +23,17 @@ public class Patient {
 		if (medicineNames == null) {
 			throw new IllegalArgumentException("Medicine Names is null.");
 		}
+
 		if(medicineNames.contains(""))
 		{
 			throw new IllegalArgumentException("Medicine Names contains Empty String.");
 		}
+
+		if(medicineNames.contains(null))
+		{
+			throw new IllegalArgumentException("Medicine Names contains a NULL value.");
+		}
+
 		if ( medicines.size() <= 1 || medicineNames.size() <= 1) {
 			return Collections.emptyList();
 		}

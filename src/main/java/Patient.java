@@ -34,7 +34,7 @@ public class Patient {
 	private boolean allMedicinesHavePrescriptions() {
 		return this.medicines
 				.stream()
-				.noneMatch(medicine -> medicine.getPrescriptions().isEmpty());
+				.allMatch(Medicine::hasPrescriptions);
 	}
 
 	private void validateInputs(Collection<String> medicineNames, int daysBack) {

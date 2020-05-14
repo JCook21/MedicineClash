@@ -18,4 +18,8 @@ public class Medicine {
 	public Collection<Prescription> getPrescriptions() {
 		return this.prescriptions;
 	}
+
+	public boolean hasPrescriptions() {
+		return  !this.getPrescriptions().isEmpty();
+	}
 }

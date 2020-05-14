@@ -2,10 +2,7 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
@@ -114,5 +111,23 @@ public class PatientTest {
         patient.addMedicine(new Medicine("Tylenol"));
 
         Assert.assertTrue(patient.clash(List.of("Aspirin", "Twinrix"), 1).isEmpty());
+    }
+
+    @Test
+    public void testTwoMedicinesWithSamePrescriptionReturnsClash() {
+        Medicine ibuprofen = new Medicine("Ibuprofen");
+        Medicine tylenol = new Medicine("Tylenol");
+        Medicine aspirin = new Medicine("Aspirin");
+
+        Prescription commonPrescription = new Prescription(LocalDate.now(), 1);
+        ibuprofen.addPrescription(commonPrescription);
+        tylenol.addPrescription(commonPrescription);
+
+        patient.addMedicine(ibuprofen);
+        patient.addMedicine(tylenol);
+        patient.addMedicine(aspirin);
+
+        Collection<LocalDate> clash = patient.clash(List.of("Tylenol", "Ibuprofen"), 1);
+        Assert.assertTrue(!clash.isEmpty());
     }
 }

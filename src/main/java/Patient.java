@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Patient {
 
@@ -16,6 +17,11 @@ public class Patient {
 		return clash(medicineNames, 90);
 	}
 
+	public Collection<LocalDate> newClash(Collection<Medicine> medicines, int daysBack){
+		var medicineString = medicines.stream().map(medicine -> medicine.getName()).collect(Collectors.toList());
+		return clash(medicineString, daysBack);
+	}
+
 	public Collection<LocalDate> clash(Collection<String> medicineNames, int daysBack) {
 
 		validateInputs(medicineNames, daysBack);
@@ -23,6 +29,8 @@ public class Patient {
 		if ( medicines.size() <= 1 || medicineNames.size() <= 1 || daysBack == 0) {
 			return Collections.emptyList();
 		}
+
+
 
 		if (!allMedicinesHavePrescriptions()) {
 			return Collections.emptyList();

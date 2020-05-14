@@ -11,6 +11,10 @@ public class Medicine {
 		this.name = name;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public void addPrescription(Prescription prescription) {
 		this.prescriptions.add(prescription);
 	}

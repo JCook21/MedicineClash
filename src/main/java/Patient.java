@@ -24,7 +24,17 @@ public class Patient {
 			return Collections.emptyList();
 		}
 
+		if (!allMedicinesHavePrescriptions()) {
+			return Collections.emptyList();
+		}
+
 		return Collections.singletonList(LocalDate.now());
+	}
+
+	private boolean allMedicinesHavePrescriptions() {
+		return this.medicines
+				.stream()
+				.noneMatch(medicine -> medicine.getPrescriptions().isEmpty());
 	}
 
 	private void validateInputs(Collection<String> medicineNames, int daysBack) {

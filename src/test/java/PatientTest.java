@@ -109,10 +109,10 @@ public class PatientTest {
     }
 
     @Test
-    @Ignore
     public void testOneDayBackWithNoPrescriptionsReturnsEmptyCollection() {
         patient.addMedicine(new Medicine("Ibuprofen"));
         patient.addMedicine(new Medicine("Tylenol"));
+
         Assert.assertTrue(patient.clash(List.of("Aspirin", "Twinrix"), 1).isEmpty());
     }
 }

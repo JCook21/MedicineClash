@@ -14,4 +14,8 @@ public class Medicine {
 	public void addPrescription(Prescription prescription) {
 		this.prescriptions.add(prescription);
 	}
+
+	public Collection<Prescription> getPrescriptions() {
+		return this.prescriptions;
+	}
 }

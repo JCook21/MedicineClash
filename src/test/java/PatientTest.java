@@ -1,7 +1,4 @@
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.time.LocalDate;
@@ -17,18 +14,24 @@ import static org.hamcrest.Matchers.empty;
 
 public class PatientTest {
 
+    private Patient patient;
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    @Before
+    public void testSetup()
+    {
+        patient = new Patient();
+    }
+
     @Test
     public void testClashNeverReturnsNull() {
-        Patient patient = new Patient();
         Assert.assertNotNull(patient.clash(Arrays.asList("Aspirin")));
     }
 
     @Test
     public void testClashWithTwoMedicines() {
-        Patient patient = new Patient();
         Medicine tylenolMedicine = new Medicine("Tylenol");
         Medicine aspirinMedicine = new Medicine("Aspirin");
         Prescription tylenolPrescription = new Prescription(LocalDate.now(), 5);
@@ -44,34 +47,29 @@ public class PatientTest {
 
     @Test
     public void testSinglePatientNoMedicine(){
-        Patient patient = new Patient();
         Assert.assertTrue(patient.clash(Arrays.asList("Tylenol", "Aspirin")).isEmpty());
     }
 
     @Test
     public void testEmptyMedicineListReturnsNothing() {
-        Patient patient = new Patient();
         patient.addMedicine(new Medicine(("Advil")));
         Assert.assertTrue(patient.clash(new ArrayList<String>()).isEmpty());
     }
 
     @Test
     public void testSingleMedicineListReturnsNothing() {
-        Patient patient = new Patient();
         patient.addMedicine(new Medicine(("Advil")));
         Assert.assertTrue(patient.clash(Arrays.asList("Advil")).isEmpty());
     }
 
     @Test
     public void testSinglePatientSingleMedicine(){
-        Patient patient = new Patient();
         patient.addMedicine(new Medicine("Aspirin"));
         Assert.assertTrue(patient.clash(Arrays.asList("Tylenol", "Aspirin")).isEmpty());
     }
 
     @Test
     public void testSinglePatientNullMedicineList(){
-        Patient patient = new Patient();
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Medicine Names is null.");
         patient.addMedicine(new Medicine("Aspirin"));
@@ -81,7 +79,6 @@ public class PatientTest {
    @Test
     public void testSinglePatientWithEmptyStringMedicineList()
     {
-        Patient patient = new Patient();
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Medicine Names contains Empty String.");
         patient.clash(Collections.singletonList(""));
@@ -90,7 +87,6 @@ public class PatientTest {
     @Test
     public void testSinglePatientWithNullInMedicineList()
     {
-        Patient patient = new Patient();
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Medicine Names contains a NULL value.");
         patient.clash(Collections.singletonList(null));
@@ -99,7 +95,6 @@ public class PatientTest {
     @Test
     public void testNegativeDaysBack()
     {
-        Patient patient = new Patient();
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("daysBack cannot be negative.");
         patient.clash(Collections.singletonList("Aspirin"), -1);
@@ -108,7 +103,6 @@ public class PatientTest {
     @Test
     public void testZeroDaysBackReturnsEmptyCollection()
     {
-        Patient patient = new Patient();
         patient.addMedicine(new Medicine("Ibuprofen"));
         patient.addMedicine(new Medicine("Tylenol"));
         Assert.assertTrue(patient.clash(List.of("Aspirin", "Twinrix"), 0).isEmpty());
@@ -117,7 +111,6 @@ public class PatientTest {
     @Test
     @Ignore
     public void testOneDayBackWithNoPrescriptionsReturnsEmptyCollection() {
-        Patient patient = new Patient();
         patient.addMedicine(new Medicine("Ibuprofen"));
         patient.addMedicine(new Medicine("Tylenol"));
         Assert.assertTrue(patient.clash(List.of("Aspirin", "Twinrix"), 1).isEmpty());

@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Patient {
 
@@ -40,8 +41,15 @@ public class Patient {
 	}
 
 	private boolean allMedicinesHavePrescriptions(Collection<String> medicineNames) {
-		return this.medicines
-				.stream()
+
+		long filteredMedicineCount = this.medicines.stream()
+				.filter(medicine -> medicineNames.contains(medicine.getName()))
+				.count();
+
+		if (filteredMedicineCount == 0)
+			return false;
+
+		return this.medicines.stream()
 				.filter(medicine -> medicineNames.contains(medicine.getName()))
 				.allMatch(Medicine::hasPrescriptions);
 	}

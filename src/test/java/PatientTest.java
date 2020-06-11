@@ -130,4 +130,23 @@ public class PatientTest {
         Collection<LocalDate> clash = patient.clash(List.of("Tylenol", "Ibuprofen"), 1);
         Assert.assertTrue(!clash.isEmpty());
     }
+
+    @Test
+    public void testTwoMedicinesWithSamePrescriptionReturnsClashWithCorrectDates() {
+        Medicine ibuprofen = new Medicine("Ibuprofen");
+        Medicine tylenol = new Medicine("Tylenol");
+        Medicine aspirin = new Medicine("Aspirin");
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        Prescription commonPrescription = new Prescription(yesterday, 1);
+        ibuprofen.addPrescription(commonPrescription);
+        tylenol.addPrescription(commonPrescription);
+
+        patient.addMedicine(ibuprofen);
+        patient.addMedicine(tylenol);
+        patient.addMedicine(aspirin);
+
+        Collection<LocalDate> clash = patient.clash(List.of("Tylenol", "Ibuprofen"), 10);
+        Assert.assertTrue(clash.contains(yesterday));
+    }
 }

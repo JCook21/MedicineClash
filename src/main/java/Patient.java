@@ -31,7 +31,6 @@ public class Patient {
 			return Collections.emptyList();
 		}
 
-
 		if (!allMedicinesHavePrescriptions(medicineNames)) {
 			return Collections.emptyList();
 		}
@@ -39,6 +38,12 @@ public class Patient {
 		List<Medicine> filteredMedicines = this.medicines.stream()
 				.filter(medicine -> medicineNames.contains(medicine.getName()))
 				.collect(Collectors.toList());
+
+		Map<Medicine, Collection<Prescription>> myMap = new HashMap<>();
+
+		for (Medicine med: filteredMedicines) {
+			myMap.put(med, med.getPrescriptions());
+		}
 
 		return Collections.singletonList(LocalDate.now());
 	}

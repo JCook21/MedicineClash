@@ -32,13 +32,18 @@ public class Patient {
 		}
 
 
-
 		if (!allMedicinesHavePrescriptions(medicineNames)) {
 			return Collections.emptyList();
 		}
 
+		List<Medicine> filteredMedicines = this.medicines.stream()
+				.filter(medicine -> medicineNames.contains(medicine.getName()))
+				.collect(Collectors.toList());
+
 		return Collections.singletonList(LocalDate.now());
 	}
+
+
 
 	private boolean allMedicinesHavePrescriptions(Collection<String> medicineNames) {
 

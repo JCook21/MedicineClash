@@ -39,6 +39,18 @@ public class Patient {
 				.filter(medicine -> medicineNames.contains(medicine.getName()))
 				.collect(Collectors.toList());
 
+		Set<Medicine> medsWithinDaysBack = new HashSet<>();
+		for (Medicine meds : filteredMedicines)
+		{
+			for(Prescription pres : meds.getPrescriptions())
+			{
+				if (pres.isWithinWindow(daysBack))
+				{
+					medsWithinDaysBack.add(meds);
+				}
+			}
+		}
+
 		Map<Medicine, Collection<Prescription>> myMap = new HashMap<>();
 
 		for (Medicine med: filteredMedicines) {

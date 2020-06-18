@@ -51,11 +51,14 @@ public class Patient {
 			}
 		}
 
+		//iterate over the set, and identify the dates where the medicines have clashes.
+
 		Map<Medicine, Collection<Prescription>> myMap = new HashMap<>();
 
 		for (Medicine med: filteredMedicines) {
 			myMap.put(med, med.getPrescriptions());
 		}
+
 
 		return Collections.singletonList(LocalDate.now());
 	}

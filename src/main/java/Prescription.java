@@ -27,4 +27,12 @@ public class Prescription {
         this.daysSupply = daysSupply;
     }
 
+    public boolean isWithinWindow(int daysBack) {
+        LocalDate windowStartDate = LocalDate.now().minusDays(daysBack);
+
+        LocalDate supplyEndDate = dispenseDate.plusDays(daysSupply);
+
+        return supplyEndDate.isAfter(windowStartDate) || supplyEndDate.equals(windowStartDate);
+    }
+
 }

@@ -172,5 +172,24 @@ public class PatientTest {
         Assert.assertTrue(clash.isEmpty());
     }
 
+    @Test
+    public void testClashHappensOutsideTheWindow() {
+        Medicine ibuprofen = new Medicine("Ibuprofen");
+        Medicine tylenol = new Medicine("Tylenol");
+
+        LocalDate tenDaysAgo = LocalDate.now().minusDays(10);
+        Prescription commonPrescription = new Prescription(tenDaysAgo, 2);
+        Prescription prescriptionOutsideWindow = new Prescription(tenDaysAgo, 4);
+
+        ibuprofen.addPrescription(commonPrescription);
+        tylenol.addPrescription(prescriptionOutsideWindow);
+
+        patient.addMedicine(ibuprofen);
+        patient.addMedicine(tylenol);
+
+        Collection<LocalDate> clash = patient.clash(List.of("Tylenol", "Ibuprofen"), 7);
+        Assert.assertTrue(clash.isEmpty());
+    }
+
 
 }

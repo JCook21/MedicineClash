@@ -172,6 +172,21 @@ public class PatientTest {
         Assert.assertTrue(clash.isEmpty());
     }
 
+    @Test
+    public void testClashWithinWindow_AccurateDates() {
+        LocalDate tenDaysAgo = LocalDate.now().minusDays(10);
+        Prescription commonPrescription = new Prescription(tenDaysAgo, 20);
+
+        ibuprofen.addPrescription(commonPrescription);
+        tylenol.addPrescription(commonPrescription);
+
+        addMedicineToPatient(ibuprofen, tylenol);
+
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 10);
+
+        Assert.assertEquals(11, clash.size());
+    }
+
 
     private void addMedicineToPatient(Medicine... listOfMedicines) {
 

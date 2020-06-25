@@ -39,47 +39,59 @@ public class Patient {
 				.filter(medicine -> medicineNames.contains(medicine.getName()))
 				.collect(Collectors.toList());
 
-		Set<Medicine> medsWithinDaysBack = new HashSet<>();
-		for (Medicine meds : filteredMedicines)
-		{
-			for(Prescription pres : meds.getPrescriptions())
-			{
-				if (pres.isWithinWindow(daysBack))
-				{
-					medsWithinDaysBack.add(meds);
-				}
-			}
-		}
+        Set<Medicine> medsWithinDaysBack = getMedicinesWithinDaysBack(daysBack, filteredMedicines);
 
-		//iterate over the set, and identify the dates where the medicines have clashes.
-		// med1 : p1, p2
-		// med2 : p3, p4
-		// p : start, end
-		// timeline: s1..e1
-		// timeline: s1..s2...e2...e1 | s1...s2..e1..e2 | s1..e1...s2...e2
+        // MAP: date -> Presc
+        List<LocalDate> clashingDates = getClashingDates(filteredMedicines, medsWithinDaysBack, daysBack);
 
-		// MAP: date -> Presc
-		List<LocalDate> clashingDates = new ArrayList<LocalDate>();
-		Map<LocalDate, Integer> datePrescriptionMap = new HashMap<>();
-		for (Medicine medicine : medsWithinDaysBack) {
-			for (Prescription prescription : medicine.getPrescriptions()) {
-				LocalDate currDate = prescription.getDispenseDate();
-				LocalDate endDate = prescription.getDispenseDate().plusDays(prescription.getDaysSupply());
-				for ( ; currDate.isBefore(endDate) || currDate.isEqual(endDate); currDate = currDate.plusDays(1)) {
-					int currCount = datePrescriptionMap.get(currDate) != null ? datePrescriptionMap.get(currDate) : 0;
-					datePrescriptionMap.put(currDate, ++currCount);
-					if(currCount >= filteredMedicines.size()) {
-						clashingDates.add(currDate);
-					}
-				}
-			}
-		}
 		return clashingDates;
 	}
 
+    private Set<Medicine> getMedicinesWithinDaysBack(int daysBack, List<Medicine> filteredMedicines) {
+        Set<Medicine> medsWithinDaysBack = new HashSet<>();
+        for (Medicine meds : filteredMedicines)
+        {
+            for(Prescription pres : meds.getPrescriptions())
+            {
+                if (pres.isWithinWindow(daysBack))
+                {
+                    medsWithinDaysBack.add(meds);
+                }
+            }
+        }
+        return medsWithinDaysBack;
+    }
+
+    private List<LocalDate> getClashingDates(List<Medicine> filteredMedicines, Set<Medicine> medsWithinDaysBack, int daysBack) {
+
+	    LocalDate windowStartDate = LocalDate.now().minusDays(daysBack);
+	    LocalDate windowEndDate = LocalDate.now();
+
+        List<LocalDate> clashingDates = new ArrayList<LocalDate>();
+        Map<LocalDate, Integer> datePrescriptionMap = new HashMap<>();
+        for (Medicine medicine : medsWithinDaysBack) {
+            for (Prescription prescription : medicine.getPrescriptions()) {
+
+                LocalDate prescriptionDispenseDate = prescription.getDispenseDate();
+                LocalDate prescriptionEndDate = prescriptionDispenseDate.plusDays(prescription.getDaysSupply());
+
+                LocalDate currDate = prescriptionDispenseDate.isBefore(windowStartDate) ? windowStartDate : prescriptionDispenseDate;
+                LocalDate endDate = prescriptionEndDate.isAfter(windowEndDate) ? windowEndDate : prescriptionEndDate;
+
+                for ( ; currDate.isBefore(endDate) || currDate.isEqual(endDate); currDate = currDate.plusDays(1)) {
+                    int currCount = datePrescriptionMap.get(currDate) != null ? datePrescriptionMap.get(currDate) : 0;
+                    datePrescriptionMap.put(currDate, ++currCount);
+                    if(currCount >= filteredMedicines.size()) {
+                        clashingDates.add(currDate);
+                    }
+                }
+            }
+        }
+        return clashingDates;
+    }
 
 
-	private boolean allMedicinesHavePrescriptions(Collection<String> medicineNames) {
+    private boolean allMedicinesHavePrescriptions(Collection<String> medicineNames) {
 
 		long filteredMedicineCount = this.medicines.stream()
 				.filter(medicine -> medicineNames.contains(medicine.getName()))

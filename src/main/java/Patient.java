@@ -52,6 +52,24 @@ public class Patient {
 		}
 
 		//iterate over the set, and identify the dates where the medicines have clashes.
+		// med1 : p1, p2
+		// med2 : p3, p4
+		// p : start, end
+		// timeline: s1..e1
+		// timeline: s1..s2...e2...e1 | s1...s2..e1..e2 | s1..e1...s2...e2
+
+		// MAP: date -> Presc
+		Map<LocalDate, Integer> datePrescriptionMap = new HashMap<>();
+		for (Medicine medicine : medsWithinDaysBack) {
+			for (Prescription prescription : medicine.getPrescriptions()) {
+				LocalDate currDate = prescription.getDispenseDate();
+				LocalDate endDate = prescription.getDispenseDate().plusDays(prescription.getDaysSupply());
+				for ( ; currDate.isBefore(endDate); currDate = currDate.plusDays(1)) {
+					int currCount = datePrescriptionMap.get(currDate) != null ? datePrescriptionMap.get(currDate) : 0;
+					datePrescriptionMap.put(currDate, currCount + 1);
+				}
+			}
+		}
 
 		Map<Medicine, Collection<Prescription>> myMap = new HashMap<>();
 

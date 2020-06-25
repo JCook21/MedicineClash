@@ -16,14 +16,6 @@ Health Insurance companies don't always get such good press, but in this case, t
 
 For this Kata, you have a recently discovered medicine clash, and you want to look through a database of patient medicine and prescription records, to find if any need to be alerted to the problem. Create a "Patient" class, with a method "Clash" that takes as arguments a list of medicine names, and how many days before today to consider, (defaults to the last 90 days). It should return a collection of days on which all the medicines were being taken during this time.
 
-# Doing this kata on cyber-dojo
-
-As an alternative to downloading the code, click one of the links below to create a new cyber-dojo to work in, then press "start" to get going coding.
-
-- [Python](http://cyber-dojo.com/forker/fork/0B0F2D70B1?avatar=lion&tag=2)
-- [Ruby](http://cyber-dojo.com/forker/fork/DFDB32D26B?avatar=elephant&tag=9)
-- [C++](http://www.cyber-dojo.com/forker/fork/E733A0E0C5?avatar=koala&tag=15)
-- [Java](http://cyber-dojo.com/forker/fork/87DE97E099?avatar=lion&tag=34)
 
 ## Data Format
 

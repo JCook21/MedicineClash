@@ -59,14 +59,18 @@ public class Patient {
 		// timeline: s1..s2...e2...e1 | s1...s2..e1..e2 | s1..e1...s2...e2
 
 		// MAP: date -> Presc
+		List<LocalDate> clashingDates = new ArrayList<LocalDate>();
 		Map<LocalDate, Integer> datePrescriptionMap = new HashMap<>();
 		for (Medicine medicine : medsWithinDaysBack) {
 			for (Prescription prescription : medicine.getPrescriptions()) {
 				LocalDate currDate = prescription.getDispenseDate();
 				LocalDate endDate = prescription.getDispenseDate().plusDays(prescription.getDaysSupply());
-				for ( ; currDate.isBefore(endDate); currDate = currDate.plusDays(1)) {
+				for ( ; currDate.isBefore(endDate) || currDate.isEqual(endDate); currDate = currDate.plusDays(1)) {
 					int currCount = datePrescriptionMap.get(currDate) != null ? datePrescriptionMap.get(currDate) : 0;
-					datePrescriptionMap.put(currDate, currCount + 1);
+					datePrescriptionMap.put(currDate, ++currCount);
+					if(currCount >= filteredMedicines.size()) {
+						clashingDates.add(currDate);
+					}
 				}
 			}
 		}

@@ -74,15 +74,7 @@ public class Patient {
 				}
 			}
 		}
-
-		Map<Medicine, Collection<Prescription>> myMap = new HashMap<>();
-
-		for (Medicine med: filteredMedicines) {
-			myMap.put(med, med.getPrescriptions());
-		}
-
-
-		return Collections.singletonList(LocalDate.now());
+		return clashingDates;
 	}
 
 

@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.empty;
 public class PatientTest {
 
     private Patient patient;
+    Medicine ibuprofen, tylenol, aspirin;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -20,31 +21,31 @@ public class PatientTest {
     public void testSetup()
     {
         patient = new Patient();
+        ibuprofen = new Medicine("Ibuprofen");
+        tylenol = new Medicine("Tylenol");
+        aspirin = new Medicine("Aspirin");
     }
 
     @Test
     public void testClashNeverReturnsNull() {
-        Assert.assertNotNull(patient.clash(Arrays.asList("Aspirin")));
+        Assert.assertNotNull(patient.clash(Arrays.asList(aspirin.getName())));
     }
 
     @Test
     public void testClashWithTwoMedicines() {
-        Medicine tylenolMedicine = new Medicine("Tylenol");
-        Medicine aspirinMedicine = new Medicine("Aspirin");
         Prescription tylenolPrescription = new Prescription(LocalDate.now(), 5);
 
-        aspirinMedicine.addPrescription(tylenolPrescription);
-        tylenolMedicine.addPrescription(tylenolPrescription);
+        aspirin.addPrescription(tylenolPrescription);
+        tylenol.addPrescription(tylenolPrescription);
 
-        patient.addMedicine(tylenolMedicine);
-        patient.addMedicine(aspirinMedicine);
+        addMedicineToPatient(tylenol, aspirin);
 
-        assertThat(patient.clash(Arrays.asList("Tylenol", "Aspirin")), is(not(empty())));
+        assertThat(patient.clash(Arrays.asList(tylenol.getName(), aspirin.getName())), is(not(empty())));
     }
 
     @Test
     public void testSinglePatientNoMedicine(){
-        Assert.assertTrue(patient.clash(Arrays.asList("Tylenol", "Aspirin")).isEmpty());
+        Assert.assertTrue(patient.clash(Arrays.asList(tylenol.getName(), aspirin.getName())).isEmpty());
     }
 
     @Test
@@ -61,15 +62,15 @@ public class PatientTest {
 
     @Test
     public void testSinglePatientSingleMedicine(){
-        patient.addMedicine(new Medicine("Aspirin"));
-        Assert.assertTrue(patient.clash(Arrays.asList("Tylenol", "Aspirin")).isEmpty());
+        addMedicineToPatient(aspirin);
+        Assert.assertTrue(patient.clash(Arrays.asList(tylenol.getName(), aspirin.getName())).isEmpty());
     }
 
     @Test
     public void testSinglePatientNullMedicineList(){
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Medicine Names is null.");
-        patient.addMedicine(new Medicine("Aspirin"));
+        patient.addMedicine(new Medicine(aspirin.getName()));
         patient.clash(null);
     }
 
@@ -94,68 +95,53 @@ public class PatientTest {
     {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("daysBack cannot be negative.");
-        patient.clash(Collections.singletonList("Aspirin"), -1);
+        patient.clash(Collections.singletonList(aspirin.getName()), -1);
     }
 
     @Test
     public void testZeroDaysBackReturnsEmptyCollection()
     {
-        patient.addMedicine(new Medicine("Ibuprofen"));
-        patient.addMedicine(new Medicine("Tylenol"));
-        Assert.assertTrue(patient.clash(List.of("Aspirin", "Twinrix"), 0).isEmpty());
+        addMedicineToPatient(ibuprofen, tylenol);
+        Assert.assertTrue(patient.clash(List.of(aspirin.getName(), "Twinrix"), 0).isEmpty());
     }
 
     @Test
     public void testOneDayBackWithNoPrescriptionsReturnsEmptyCollection() {
-        patient.addMedicine(new Medicine("Ibuprofen"));
-        patient.addMedicine(new Medicine("Tylenol"));
+        addMedicineToPatient(ibuprofen, tylenol);
 
-        Assert.assertTrue(patient.clash(List.of("Aspirin", "Twinrix"), 1).isEmpty());
+        Assert.assertTrue(patient.clash(List.of(aspirin.getName(), "Twinrix"), 1).isEmpty());
     }
 
     @Test
     public void testTwoMedicinesWithSamePrescriptionReturnsClash() {
-        Medicine ibuprofen = new Medicine("Ibuprofen");
-        Medicine tylenol = new Medicine("Tylenol");
-        Medicine aspirin = new Medicine("Aspirin");
 
         Prescription commonPrescription = new Prescription(LocalDate.now(), 1);
         ibuprofen.addPrescription(commonPrescription);
         tylenol.addPrescription(commonPrescription);
 
-        patient.addMedicine(ibuprofen);
-        patient.addMedicine(tylenol);
-        patient.addMedicine(aspirin);
+        addMedicineToPatient(ibuprofen, tylenol, aspirin);
 
-        Collection<LocalDate> clash = patient.clash(List.of("Tylenol", "Ibuprofen"), 1);
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 1);
         Assert.assertTrue(!clash.isEmpty());
     }
 
     @Test
     public void testTwoMedicinesWithSamePrescriptionReturnsClashWithCorrectDates() {
-        Medicine ibuprofen = new Medicine("Ibuprofen");
-        Medicine tylenol = new Medicine("Tylenol");
-        Medicine aspirin = new Medicine("Aspirin");
+
 
         LocalDate yesterday = LocalDate.now().minusDays(1);
         Prescription commonPrescription = new Prescription(yesterday, 1);
         ibuprofen.addPrescription(commonPrescription);
         tylenol.addPrescription(commonPrescription);
 
-        patient.addMedicine(ibuprofen);
-        patient.addMedicine(tylenol);
-        patient.addMedicine(aspirin);
+        addMedicineToPatient(ibuprofen, tylenol, aspirin);
 
-        Collection<LocalDate> clash = patient.clash(List.of("Tylenol", "Ibuprofen"), 10);
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 10);
         Assert.assertTrue(clash.contains(yesterday));
     }
 
     @Test
     public void testMultipleMedicinesWithTwoDiffPrescriptionsReturnsNoClash() {
-        Medicine ibuprofen = new Medicine("Ibuprofen");
-        Medicine tylenol = new Medicine("Tylenol");
-        Medicine aspirin = new Medicine("Aspirin");
-
         LocalDate yesterday = LocalDate.now().minusDays(1);
         Prescription commonPrescription = new Prescription(yesterday, 10);
         Prescription rarePrescription = new Prescription(yesterday.minusDays(5), 1);
@@ -164,19 +150,15 @@ public class PatientTest {
         tylenol.addPrescription(commonPrescription);
         aspirin.addPrescription(rarePrescription);
 
-        patient.addMedicine(ibuprofen);
-        patient.addMedicine(tylenol);
-        patient.addMedicine(aspirin);
+        addMedicineToPatient(ibuprofen, tylenol, aspirin);
 
-        Collection<LocalDate> clash = patient.clash(List.of("Tylenol", "Ibuprofen", "Aspirin"), 10);
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName(), aspirin.getName()), 10);
         Assert.assertTrue(clash.isEmpty());
     }
 
+
     @Test
     public void testClashHappensOutsideTheWindow() {
-        Medicine ibuprofen = new Medicine("Ibuprofen");
-        Medicine tylenol = new Medicine("Tylenol");
-
         LocalDate tenDaysAgo = LocalDate.now().minusDays(10);
         Prescription commonPrescription = new Prescription(tenDaysAgo, 2);
         Prescription prescriptionOutsideWindow = new Prescription(tenDaysAgo, 4);
@@ -184,12 +166,19 @@ public class PatientTest {
         ibuprofen.addPrescription(commonPrescription);
         tylenol.addPrescription(prescriptionOutsideWindow);
 
-        patient.addMedicine(ibuprofen);
-        patient.addMedicine(tylenol);
+        addMedicineToPatient(ibuprofen, tylenol);
 
-        Collection<LocalDate> clash = patient.clash(List.of("Tylenol", "Ibuprofen"), 7);
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 7);
         Assert.assertTrue(clash.isEmpty());
     }
 
+
+    private void addMedicineToPatient(Medicine... listOfMedicines) {
+
+        for (Medicine meds : listOfMedicines)
+        {
+            patient.addMedicine(meds);
+        }
+    }
 
 }

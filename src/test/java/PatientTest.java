@@ -270,7 +270,7 @@ public class PatientTest {
         LocalDate fiveDaysAgo = LocalDate.now().minusDays(5);
 
         Prescription prescription1 = new Prescription(thirtyDaysAgo, 10);
-        Prescription prescription2 = new Prescription(tenDaysAgo, 4);
+        Prescription prescription2 = new Prescription(tenDaysAgo, 5);
         Prescription prescription3 = new Prescription(fiveDaysAgo, 2);
 
         ibuprofen.addPrescription(prescription1);
@@ -285,6 +285,28 @@ public class PatientTest {
 
         Assert.assertEquals(0, clash.size());
     }
+
+    @Test
+    public void testClash_Prescription_multipleClashesWithinWindow() {
+        LocalDate tenDaysAgo = LocalDate.now().minusDays(10);
+        LocalDate twentyDaysAgo = LocalDate.now().minusDays(20);
+
+        Prescription prescription1 = new Prescription(tenDaysAgo, 2);
+        Prescription prescription2 = new Prescription(twentyDaysAgo, 2);
+
+        ibuprofen.addPrescription(prescription1);
+        ibuprofen.addPrescription(prescription2);
+
+        tylenol.addPrescription(prescription1);
+        tylenol.addPrescription(prescription2);
+
+        addMedicineToPatient(ibuprofen, tylenol);
+
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 25);
+
+        Assert.assertEquals(4, clash.size());
+    }
+
 
     private void addMedicineToPatient(Medicine... listOfMedicines) {
 

@@ -192,19 +192,11 @@ public class PatientTest {
     // presc2_eight_days_ago___five_days_ago___presc2_end_3_days_ago__today
     @Test
     public void testClash_PrescriptionStartsBeforeWindow_PrescriptionEndsWithinWindow_AccurateDates() {
-        LocalDate tenDaysAgo = LocalDate.now().minusDays(10);
-        LocalDate eightDaysAgo = LocalDate.now().minusDays(8);
+        LocalDate tenDaysAgo = LocalDate.now().minusDays(10); //June 22
+        LocalDate eightDaysAgo = LocalDate.now().minusDays(8); //June 24
 
-        Prescription prescription1 = new Prescription(tenDaysAgo, 8);
-        Prescription prescription2 = new Prescription(eightDaysAgo, 5);
-
-        /*
-        Window: June 22 - July 2
-        Today: Jul 2nd
-
-        10 days ago: June 22nd (10 + 1 day)
-        8 days ago: June 24th (8 + 1 day)
-         */
+        Prescription prescription1 = new Prescription(tenDaysAgo, 8); //June 30
+        Prescription prescription2 = new Prescription(eightDaysAgo, 5); // June 29
 
         ibuprofen.addPrescription(prescription1);
         tylenol.addPrescription(prescription2);

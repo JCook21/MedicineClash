@@ -137,7 +137,7 @@ public class PatientTest {
         addMedicineToPatient(ibuprofen, tylenol, aspirin);
 
         Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 10);
-        Assert.assertTrue(clash.contains(yesterday));
+        Assert.assertTrue(clash.contains(yesterday) && clash.size() == 1);
     }
 
     @Test
@@ -184,7 +184,14 @@ public class PatientTest {
 
         Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 10);
 
-        Assert.assertEquals(11, clash.size());
+        List<LocalDate> expectedDates = new ArrayList<>();
+
+        for(LocalDate currentDate = tenDaysAgo; currentDate.isBefore(LocalDate.now()) || currentDate.isEqual(LocalDate.now()); currentDate = currentDate.plusDays(1)){
+            expectedDates.add(currentDate);
+        }
+
+        Assert.assertEquals(expectedDates.size(), clash.size());
+        Assert.assertTrue(clash.containsAll(expectedDates));
     }
 
     @Test

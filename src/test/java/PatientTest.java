@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.empty;
 public class PatientTest {
 
     private Patient patient;
-    Medicine ibuprofen, tylenol, aspirin;
+    private Medicine ibuprofen, tylenol, aspirin;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -28,7 +28,7 @@ public class PatientTest {
 
     @Test
     public void testClashNeverReturnsNull() {
-        Assert.assertNotNull(patient.clash(Arrays.asList(aspirin.getName())));
+        Assert.assertNotNull(patient.clash(Collections.singletonList(aspirin.getName())));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class PatientTest {
     @Test
     public void testSingleMedicineListReturnsNothing() {
         patient.addMedicine(new Medicine(("Advil")));
-        Assert.assertTrue(patient.clash(Arrays.asList("Advil")).isEmpty());
+        Assert.assertTrue(patient.clash(Collections.singletonList("Advil")).isEmpty());
     }
 
     @Test
@@ -192,11 +192,11 @@ public class PatientTest {
     // presc2_eight_days_ago___five_days_ago___presc2_end_3_days_ago__today
     @Test
     public void testClash_PrescriptionStartsBeforeWindow_PrescriptionEndsWithinWindow_AccurateDates() {
-        LocalDate tenDaysAgo = LocalDate.now().minusDays(10); //June 22
-        LocalDate eightDaysAgo = LocalDate.now().minusDays(8); //June 24
+        LocalDate tenDaysAgo = LocalDate.now().minusDays(10);
+        LocalDate eightDaysAgo = LocalDate.now().minusDays(8);
 
-        Prescription prescription1 = new Prescription(tenDaysAgo, 8); //June 30
-        Prescription prescription2 = new Prescription(eightDaysAgo, 5); // June 29
+        Prescription prescription1 = new Prescription(tenDaysAgo, 8);
+        Prescription prescription2 = new Prescription(eightDaysAgo, 5);
 
         ibuprofen.addPrescription(prescription1);
         tylenol.addPrescription(prescription2);
@@ -205,7 +205,7 @@ public class PatientTest {
 
         Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 10);
 
-        Assert.assertEquals(3, clash.size());
+        Assert.assertEquals(5, clash.size());
     }
 
 

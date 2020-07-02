@@ -73,7 +73,8 @@ public class Patient {
             for (Prescription prescription : medicine.getPrescriptions()) {
 
                 LocalDate prescriptionDispenseDate = prescription.getDispenseDate();
-                LocalDate prescriptionEndDate = prescriptionDispenseDate.plusDays(prescription.getDaysSupply());
+                //There is a minus 1 below, because the days supply includes the dispense date.
+                LocalDate prescriptionEndDate = prescriptionDispenseDate.plusDays(prescription.getDaysSupply() - 1) ;
 
                 LocalDate currDate = prescriptionDispenseDate.isBefore(windowStartDate) ? windowStartDate : prescriptionDispenseDate;
                 LocalDate endDate = prescriptionEndDate.isAfter(windowEndDate) ? windowEndDate : prescriptionEndDate;

@@ -263,6 +263,29 @@ public class PatientTest {
         Assert.assertEquals(5 * 365, clash.size());
     }
 
+    @Test
+    public void testClashOneMedicineMultiplePrescriptionsAndClashOutsideWindow() {
+        LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
+        LocalDate tenDaysAgo = LocalDate.now().minusDays(10);
+        LocalDate fiveDaysAgo = LocalDate.now().minusDays(5);
+
+        Prescription prescription1 = new Prescription(thirtyDaysAgo, 10);
+        Prescription prescription2 = new Prescription(tenDaysAgo, 4);
+        Prescription prescription3 = new Prescription(fiveDaysAgo, 2);
+
+        ibuprofen.addPrescription(prescription1);
+        tylenol.addPrescription(prescription1);
+
+        ibuprofen.addPrescription(prescription2);
+        tylenol.addPrescription(prescription3);
+
+        addMedicineToPatient(ibuprofen, tylenol);
+
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 7);
+
+        Assert.assertEquals(0, clash.size());
+    }
+
     private void addMedicineToPatient(Medicine... listOfMedicines) {
 
         for (Medicine meds : listOfMedicines)

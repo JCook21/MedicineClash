@@ -187,6 +187,24 @@ public class PatientTest {
         Assert.assertEquals(11, clash.size());
     }
 
+    @Test
+    public void testClash_NonOverlappingPrescriptions_WithinWindow_NoClash() {
+        LocalDate tenDaysAgo = LocalDate.now().minusDays(10);
+        LocalDate fiveDaysAgo = LocalDate.now().minusDays(5);
+
+        Prescription prescription1 = new Prescription(tenDaysAgo, 3);
+        Prescription prescription2 = new Prescription(fiveDaysAgo, 2);
+
+        ibuprofen.addPrescription(prescription1);
+        tylenol.addPrescription(prescription2);
+
+        addMedicineToPatient(ibuprofen, tylenol);
+
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 10);
+
+        Assert.assertEquals(0, clash.size());
+    }
+
     // presc have clashes
     // presc1_ten_days_ago___five_days_ago___presc1_end_2_days_ago__today
     // presc2_eight_days_ago___five_days_ago___presc2_end_3_days_ago__today

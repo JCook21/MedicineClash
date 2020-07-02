@@ -208,6 +208,24 @@ public class PatientTest {
         Assert.assertEquals(3, clash.size());
     }
 
+
+    @Test
+    public void testClash_Prescription_daysSupplyIsEqualToClashingDates() {
+        LocalDate tenDaysAgo = LocalDate.now().minusDays(10);
+
+        Prescription prescription1 = new Prescription(tenDaysAgo, 8);
+        Prescription prescription2 = new Prescription(tenDaysAgo, 8);
+
+        ibuprofen.addPrescription(prescription1);
+        tylenol.addPrescription(prescription2);
+
+        addMedicineToPatient(ibuprofen, tylenol);
+
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 10);
+
+        Assert.assertEquals(8, clash.size());
+    }
+
     private void addMedicineToPatient(Medicine... listOfMedicines) {
 
         for (Medicine meds : listOfMedicines)

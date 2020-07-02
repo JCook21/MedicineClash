@@ -244,6 +244,25 @@ public class PatientTest {
         Assert.assertEquals(8, clash.size());
     }
 
+
+    @Test
+    public void testClash_PrescriptionWithLargeNumbers_AccurateDates() {
+        LocalDate tenYearsAgo = LocalDate.now().minusYears(10);
+        LocalDate eightYearsAgo = LocalDate.now().minusYears(8);
+
+        Prescription prescription1 = new Prescription(tenYearsAgo, 8 * 365);
+        Prescription prescription2 = new Prescription(eightYearsAgo, 5 * 365);
+
+        ibuprofen.addPrescription(prescription1);
+        tylenol.addPrescription(prescription2);
+
+        addMedicineToPatient(ibuprofen, tylenol);
+
+        Collection<LocalDate> clash = patient.clash(List.of(tylenol.getName(), ibuprofen.getName()), 10 * 365);
+
+        Assert.assertEquals(5 * 365, clash.size());
+    }
+
     private void addMedicineToPatient(Medicine... listOfMedicines) {
 
         for (Medicine meds : listOfMedicines)

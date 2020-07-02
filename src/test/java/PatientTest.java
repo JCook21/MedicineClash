@@ -198,6 +198,14 @@ public class PatientTest {
         Prescription prescription1 = new Prescription(tenDaysAgo, 8);
         Prescription prescription2 = new Prescription(eightDaysAgo, 5);
 
+        /*
+        Window: June 22 - July 2
+        Today: Jul 2nd
+
+        10 days ago: June 22nd (10 + 1 day)
+        8 days ago: June 24th (8 + 1 day)
+         */
+
         ibuprofen.addPrescription(prescription1);
         tylenol.addPrescription(prescription2);
 

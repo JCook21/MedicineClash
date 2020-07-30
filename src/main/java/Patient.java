@@ -18,11 +18,6 @@ public class Patient {
 		return clash(medicineNames, 90);
 	}
 
-	public Collection<LocalDate> newClash(Collection<Medicine> medicines, int daysBack){
-		var medicineString = medicines.stream().map(medicine -> medicine.getName()).collect(Collectors.toList());
-		return clash(medicineString, daysBack);
-	}
-
 	public Collection<LocalDate> clash(Collection<String> medicineNames, int daysBack) {
 
 		validateInputs(medicineNames, daysBack);
@@ -49,16 +44,29 @@ public class Patient {
 
     private Set<Medicine> getMedicinesWithinDaysBack(int daysBack, List<Medicine> filteredMedicines) {
         Set<Medicine> medsWithinDaysBack = new HashSet<>();
-        for (Medicine meds : filteredMedicines)
-        {
-            for(Prescription pres : meds.getPrescriptions())
-            {
-                if (pres.isWithinWindow(daysBack))
-                {
-                    medsWithinDaysBack.add(meds);
-                }
-            }
-        }
+
+        // TODO: Use filter() approach instead of forEach()
+
+        filteredMedicines
+				.forEach(medicine -> {
+
+					boolean isAnyPrescriptionWithinWindow = medicine.getPrescriptions().stream()
+							.anyMatch(prescription -> prescription.isWithinWindow(daysBack));
+
+					if (isAnyPrescriptionWithinWindow) {
+						medsWithinDaysBack.add(medicine);
+					}
+				});
+
+//        for (Medicine meds : filteredMedicines)
+//		  	for(Prescription pres : meds.getPrescriptions())
+//            {
+//		          if (pres.isWithinWindow(daysBack))
+//                {
+//                    medsWithinDaysBack.add(meds);
+//                }
+//            }
+//        }
         return medsWithinDaysBack;
     }
 
